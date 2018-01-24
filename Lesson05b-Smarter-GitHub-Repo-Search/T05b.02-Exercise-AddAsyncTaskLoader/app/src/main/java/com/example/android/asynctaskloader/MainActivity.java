@@ -15,9 +15,13 @@
  */
 package com.example.android.asynctaskloader;
 
+import android.app.LoaderManager;
+import android.content.Loader;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.content.AsyncTaskLoader;
 import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -30,8 +34,8 @@ import com.example.android.asynctaskloader.utilities.NetworkUtils;
 import java.io.IOException;
 import java.net.URL;
 
-// TODO (1) implement LoaderManager.LoaderCallbacks<String> on MainActivity
-public class MainActivity extends AppCompatActivity {
+// done (1) implement LoaderManager.LoaderCallbacks<String> on MainActivity
+public class MainActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<String>{
 
     /* A constant to save and restore the URL that is being displayed */
     private static final String SEARCH_QUERY_URL_EXTRA = "query";
@@ -40,8 +44,8 @@ public class MainActivity extends AppCompatActivity {
     /* A constant to save and restore the JSON that is being displayed */
     private static final String SEARCH_RESULTS_RAW_JSON = "results";
 
-    // TODO (2) Create a constant int to uniquely identify your loader. Call it GITHUB_SEARCH_LOADER
-
+    // done (2) Create a constant int to uniquely identify your loader. Call it GITHUB_SEARCH_LOADER
+    private static final int GITHUB_SEARCH_LOADER = 22;
     private EditText mSearchBoxEditText;
 
     private TextView mUrlDisplayTextView;
@@ -131,15 +135,58 @@ public class MainActivity extends AppCompatActivity {
         mErrorMessageDisplay.setVisibility(View.VISIBLE);
     }
 
-    // TODO (3) Override onCreateLoader
+
+
+    @Override
+    public void onLoadFinished(Loader<String> loader, String s) {
+
+    }
+
+    @Override
+    public void onLoaderReset(Loader<String> loader) {
+
+    }
+    // done (3) Override onCreateLoader
+
+    @Override
+    public Loader<String> onCreateLoader(int i, final Bundle bundle) {
+       return new AsyncTaskLoader<String>(this) {
+           @Override
+           protected void onStartLoading() {
+               super.onStartLoading();
+                if(bundle == null){
+                    return;
+                }
+
+               mLoadingIndicator.setVisibility(View.VISIBLE);
+           }
+
+           @Override
+           public String loadInBackground() {
+               String searchString = bundle.getString(SEARCH_QUERY_URL_EXTRA);
+               String githubSearchResults = null;
+               if(searchString == null || TextUtils.isEmpty(searchString)){
+                   return null;
+               }
+
+               try {
+                   URL searchUrl = new URL(searchString);
+                   githubSearchResults = NetworkUtils.getResponseFromHttpUrl(searchUrl);
+               } catch (IOException e) {
+                   e.printStackTrace();
+               }
+               return githubSearchResults;
+           }
+       };
+    }
     // Within onCreateLoader
-        // TODO (4) Return a new AsyncTaskLoader<String> as an anonymous inner class with this as the constructor's parameter
-            // TODO (5) Override onStartLoading
+        // done (4) Return a new AsyncTaskLoader<String> as an anonymous inner class with this as the constructor's parameter
+            // done (5) Override onStartLoading
                 // Within onStartLoading
 
-                // TODO (6) If args is null, return.
+                // done (6) If args is null, return.
 
-                // TODO (7) Show the loading indicator
+                // done (7) Show the loading indicator
 
                 // TODO (8) Force a load
                 // END - onStartLoading
