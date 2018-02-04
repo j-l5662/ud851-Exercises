@@ -165,15 +165,15 @@ public class MainActivity extends AppCompatActivity implements
     public Loader<String> onCreateLoader(int id, final Bundle args) {
         return new AsyncTaskLoader<String>(this) {
 
-            // TODO (1) Create a String member variable called mGithubJson that will store the raw JSON
-
+            // done (1) Create a String member variable called mGithubJson that will store the raw JSON
+            private String mGithubJson;
             @Override
             protected void onStartLoading() {
 
                 /* If no arguments were passed, we don't have a query to perform. Simply return. */
                 if (args == null) {
                     return;
-                }
+            }
 
                 /*
                  * When we initially begin loading in the background, we want to display the
@@ -181,8 +181,14 @@ public class MainActivity extends AppCompatActivity implements
                  */
                 mLoadingIndicator.setVisibility(View.VISIBLE);
 
-                // TODO (2) If mGithubJson is not null, deliver that result. Otherwise, force a load
+            // done (2) If mGithubJson is not null, deliver that result. Otherwise, force a load
+                if(mGithubJson != null){
+                mSearchResultsTextView.setText(mGithubJson);
+            }
+                else{
                 forceLoad();
+            }
+
             }
 
             @Override
@@ -208,6 +214,12 @@ public class MainActivity extends AppCompatActivity implements
             }
 
             // TODO (3) Override deliverResult and store the data in mGithubJson
+            @Override
+            public void deliverResult(String results){
+                mGithubJson = results;
+                super.deliverResult(results);
+            }
+
             // TODO (4) Call super.deliverResult after storing the data
         };
     }
@@ -221,7 +233,7 @@ public class MainActivity extends AppCompatActivity implements
          * If the results are null, we assume an error has occurred. There are much more robust
          * methods for checking errors, but we wanted to keep this particular example simple.
          */
-        if (null == data) {
+        if (data == null) {
             showErrorMessage();
         } else {
             mSearchResultsTextView.setText(data);
