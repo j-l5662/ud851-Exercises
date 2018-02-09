@@ -55,6 +55,7 @@ public class TestUtil {
         }
         catch (SQLException e) {
             //too bad :(
+            //lol
         }
         finally
         {
