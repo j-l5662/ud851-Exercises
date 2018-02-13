@@ -67,7 +67,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements
         if (null != preference) {
             // Updates the summary for the preference
             if (!(preference instanceof CheckBoxPreference)) {
-                String value = sharedPreferences.getString(preference.getKey(), "");
+                String value = sharedPreferences.getString(key, "");
                 setPreferenceSummary(preference, value);
             }
         }
